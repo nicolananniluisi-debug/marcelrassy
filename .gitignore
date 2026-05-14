@@ -1,0 +1,7 @@
+node_modules/
+.playwright-mcp/
+marcelrassy-html.txt
+marcelrassy-styles.txt
+marcelrassy-full.png
+clone-preview.png
+MIV/

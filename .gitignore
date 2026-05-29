@@ -5,3 +5,19 @@ marcelrassy-styles.txt
 marcelrassy-full.png
 clone-preview.png
 MIV/
+
+# Screenshots de validação soltos na raiz — mantém os assets reais
+/*.png
+/*.jpg
+/*.jpeg
+!BG5.png
+!BG MARCEL.jpg
+!MARCEL PNG.jpg
+
+# Briefings / documentos que não vão para o deploy
+*.docx
+
+# Sistema operacional / editores
+.DS_Store
+Thumbs.db
+desktop.ini

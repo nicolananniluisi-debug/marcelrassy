@@ -109,7 +109,8 @@ strong { font-weight: 700; color: var(--text); }
   background: currentColor;
   transition: width 550ms ease 300ms;
 }
-.js .offer-box.is-visible .price-cross::after { width: 100%; }
+.js .offer-box.is-visible .price-cross::after,
+.js .product-anchor.is-visible .price-cross::after { width: 100%; }
 .eyebrow {
   display: inline-block;
   font-size: 11px;
@@ -180,6 +181,29 @@ strong { font-weight: 700; color: var(--text); }
   /* disable load animations when scroll-driven takes over; keep pulse on CTA */
   .hero-badge, .hero-h1, .hero-sub, .hero-seals { animation: none; }
   .hero-cta { animation: cta-pulse 3.4s ease-in-out 800ms infinite; }
+
+  /* Card de ancoragem: reveal acompanha o scroll (em vez de disparo único) */
+  @keyframes anchor-rise     { from { transform: scale(0.94); opacity: 0.5; } to { transform: scale(1); opacity: 1; } }
+  @keyframes anchor-strike   { to { width: 100%; } }
+  @keyframes anchor-pricepop { from { transform: scale(0.9); opacity: 0.6; } to { transform: scale(1); opacity: 1; } }
+
+  .product-anchor {
+    animation: anchor-rise linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 45%;
+  }
+  .js .product-anchor .price-cross::after {
+    animation: anchor-strike linear both;
+    animation-timeline: view();
+    animation-range: entry 20% cover 55%;
+    transition: none;
+  }
+  .js .product-anchor .product-anchor-final .accent {
+    animation: anchor-pricepop linear both;
+    animation-timeline: view();
+    animation-range: entry 25% cover 60%;
+    transition: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -188,8 +212,18 @@ strong { font-weight: 700; color: var(--text); }
   .offer-box.is-visible .offer-cta,
   .final-cta-inner.is-visible .btn-primary,
   .sticky-cta.is-shown { animation: none; }
-  .js .price-cross::after { transition: none; width: 100%; }
+  .js .price-cross::after { transition: none; animation: none; width: 100%; }
   .js .offer-price { opacity: 1; transform: none; transition: none; }
+  .product-anchor,
+  .product-anchor.is-visible { animation: none; box-shadow: none; transform: none; opacity: 1; }
+  .js .product-anchor .product-anchor-final .accent { animation: none; transform: none; opacity: 1; transition: none; }
+  .product-cta-wrap.is-visible .btn-primary { animation: none; }
+  .js .timeline-num { transform: none; transition: none; }
+  .timeline-item.is-visible .timeline-num { animation: none; }
+  .timeline-bar-fill { transition: none; animation: none; transform: scaleY(1); }
+  .js .timeline-icon { opacity: 1; }
+  .js .timeline-item.is-visible .timeline-icon { animation: none; }
+  .testi-track { transition: none; }
   html { scroll-behavior: auto; }
 }
 
@@ -264,6 +298,9 @@ strong { font-weight: 700; color: var(--text); }
   margin-left: 0;
   padding-left: 80px;
 }
+
+/* Foto real do hero — usada só no mobile (desktop usa background-image) */
+.hero-photo { display: none; }
 
 .hero-content {
   max-width: 560px;
@@ -359,15 +396,142 @@ strong { font-weight: 700; color: var(--text); }
 }
 .mechanism-art svg { width: 100%; max-width: 200px; height: auto; }
 
-.mechanism-art .pulse { animation: pulse-fade 2.4s ease-in-out infinite; }
+.mechanism-art .pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse-fade 2.4s ease-in-out infinite;
+}
 .mechanism-art .pulse-1 { animation-delay: 0s; }
 .mechanism-art .pulse-2 { animation-delay: 0.6s; }
 .mechanism-art .pulse-3 { animation-delay: 1.2s; }
 
 @keyframes pulse-fade {
-  0%, 100% { opacity: 0.3; }
-  50%       { opacity: 1; }
+  0%, 100% { opacity: 0.35; transform: scale(0.82); }
+  50%       { opacity: 1;    transform: scale(1.18); }
 }
+
+/* Impulso nervoso percorrendo os ramos — religando as áreas teimosas */
+.mechanism-art .nerve {
+  stroke-dasharray: 4 7;
+  animation: nerve-flow 2.4s linear infinite;
+}
+@keyframes nerve-flow {
+  to { stroke-dashoffset: -22; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mechanism-art .pulse,
+  .mechanism-art .nerve { animation: none; }
+  .mechanism-art .pulse { opacity: 0.85; transform: scale(1); }
+}
+
+/* ─── § 3.5 — Depoimentos ────────────────────────────────────────────────── */
+.testimonials {
+  background: var(--bg-section);
+  padding: calc(88px + var(--diag)) 0 88px;
+  clip-path: polygon(0 var(--diag), 100% 0, 100% 100%, 0 100%);
+  margin-top: calc(-1 * var(--diag));
+}
+
+.testi-head { text-align: center; max-width: 640px; margin: 0 auto 52px; }
+.testi-head h2 { font-size: 36px; font-weight: 700; margin-bottom: 14px; line-height: 1.18; }
+.testi-head p  { font-size: 17px; color: var(--muted); }
+
+/* Carrossel: um depoimento por vez, setas nas laterais + dots */
+.testi-carousel {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 56px;
+}
+.testi-viewport { overflow: hidden; padding: 8px 0 22px; }
+.testi-track {
+  display: flex;
+  transition: transform 500ms var(--ease-out);
+  will-change: transform;
+}
+.testi-track > .testimonial-card { flex: 0 0 100%; min-width: 0; }
+
+.testimonial-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 10px 30px -18px rgba(26, 26, 26, 0.18);
+}
+
+.testi-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  color: var(--accent);
+  border: 1px solid var(--accent-line);
+  box-shadow: 0 6px 18px -8px rgba(26, 26, 26, 0.22);
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease, transform 200ms var(--ease-out);
+}
+.testi-arrow:hover  { background: var(--accent); color: #fff; }
+.testi-arrow:active { transform: translateY(-50%) scale(0.92); }
+.testi-arrow svg { width: 24px; height: 24px; }
+.testi-prev { left: 0; }
+.testi-next { right: 0; }
+
+.testi-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.testi-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent-line);
+  cursor: pointer;
+  transition: width 260ms var(--ease-out), background 260ms ease;
+}
+.testi-dot.is-active { width: 22px; border-radius: 4px; background: var(--accent); }
+
+.testimonial-stars { display: inline-flex; gap: 3px; color: var(--accent); }
+.testimonial-stars svg { width: 18px; height: 18px; }
+
+.testimonial-quote {
+  font-size: 16px;
+  line-height: 1.62;
+  color: var(--text-soft);
+  flex: 1;
+}
+
+.testimonial-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.testimonial-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--accent-line);
+}
+.testimonial-name { font-weight: 700; font-size: 15px; color: var(--text); }
+.testimonial-loc  { font-size: 13px; color: var(--muted); }
 
 /* ─── § 4 — Product ──────────────────────────────────────────────────────── */
 .product {
@@ -404,24 +568,31 @@ strong { font-weight: 700; color: var(--text); }
 }
 .product-card:hover { border-color: var(--accent); }
 
-/* Icon wrapper: neutral background, no filter, icons shown at real colors */
+/* Icon wrapper: tinted square, accent line-icon (Lucide) inside */
 .product-icon-wrap {
-  width: 72px;
-  height: 72px;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-section);
-  border-radius: 12px;
+  background: var(--accent-soft, #FFF4F7);
+  border-radius: 14px;
   flex-shrink: 0;
   margin-bottom: 4px;
+  transition: background 200ms ease, transform 200ms ease;
 }
 
-.product-icon-wrap img {
-  width: 52px;
-  height: 52px;
-  object-fit: contain;
+.product-icon {
+  width: 30px;
+  height: 30px;
+  color: var(--accent);
 }
+
+.product-card:hover .product-icon-wrap {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+.product-card:hover .product-icon { color: #fff; }
 
 .product-card h3 { font-size: 18px; }
 .product-card p  { font-size: 15px; line-height: 1.6; color: var(--muted); }
@@ -442,10 +613,32 @@ strong { font-weight: 700; color: var(--text); }
   background: var(--bg-card);
   border: 1px solid var(--accent-line);
   border-radius: 8px;
+  transform-origin: center;
+  transition: box-shadow 500ms ease 200ms;
 }
 .product-anchor > p             { font-size: 16px; color: var(--muted); margin-bottom: 6px; }
 .product-anchor-final           { font-size: 28px !important; font-weight: 700; color: var(--text) !important; }
 .product-anchor-final .accent   { font-size: 36px; font-weight: 800; }
+
+/* Card de ancoragem: glow sutil pulsando após o reveal */
+.product-anchor.is-visible { animation: anchor-glow 3.2s ease-in-out 900ms infinite; }
+@keyframes anchor-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 68, 122, 0);    border-color: var(--accent-line); }
+  50%       { box-shadow: 0 0 28px 2px rgba(229, 68, 122, 0.18); border-color: var(--accent); }
+}
+
+/* "R$ 47" salta e destaca ao revelar (camada extra sobre o scale do card) */
+.js .product-anchor .product-anchor-final .accent {
+  display: inline-block;
+  transform: scale(0.9);
+  opacity: 0.6;
+  transition: transform 520ms var(--ease-spring) 350ms, opacity 360ms ease 350ms;
+}
+.js .product-anchor.is-visible .product-anchor-final .accent { transform: scale(1); opacity: 1; }
+
+/* Botão CTA entre §4 e §5 */
+.product-cta-wrap { text-align: center; margin-top: 32px; }
+.product-cta-wrap.is-visible .btn-primary { animation: cta-pulse 3.4s ease-in-out 600ms infinite; }
 
 /* ─── § 5 — Authority ────────────────────────────────────────────────────── */
 .authority {
@@ -526,18 +719,19 @@ strong { font-weight: 700; color: var(--text); }
   text-align: center;
 }
 
-.timeline { display: flex; flex-direction: column; max-width: 580px; margin: 0 auto; }
+.timeline { display: flex; flex-direction: column; max-width: 600px; margin: 0 auto; }
 
-.timeline-item { display: grid; grid-template-columns: 72px 1fr; gap: 20px; }
+.timeline-item { display: grid; grid-template-columns: 72px 1fr; gap: 22px; }
 
 .timeline-axis { display: flex; flex-direction: column; align-items: center; }
 
+/* Nó numerado: contorno → acende (preenche + glow + pop) ao revelar */
 .timeline-num {
   font-size: 19px;
   font-weight: 800;
   color: var(--accent);
-  width: 50px;
-  height: 50px;
+  width: 52px;
+  height: 52px;
   border: 1.5px solid var(--accent);
   border-radius: 50%;
   display: flex;
@@ -546,20 +740,98 @@ strong { font-weight: 700; color: var(--text); }
   background: var(--bg-section);
   flex-shrink: 0;
   letter-spacing: -0.02em;
+  transform-origin: center;
+  transition:
+    background 360ms var(--ease-out),
+    color      360ms var(--ease-out),
+    transform  460ms var(--ease-spring);
 }
+.timeline-item.is-visible .timeline-num {
+  background: var(--accent);
+  color: #fff;
+  animation: node-glow 3s ease-in-out 600ms infinite;
+}
+.js .timeline-num { transform: scale(0.55); }
+.js .timeline-item.is-visible .timeline-num { transform: scale(1); }
 
+@keyframes node-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 68, 122, 0); }
+  50%       { box-shadow: 0 0 0 6px rgba(229, 68, 122, 0.10), 0 0 18px 3px rgba(229, 68, 122, 0.28); }
+}
+/* Glow escalonado para os nós não pulsarem em uníssono */
+.timeline-item:nth-child(2).is-visible .timeline-num { animation-delay: 1100ms; }
+.timeline-item:nth-child(3).is-visible .timeline-num { animation-delay: 1600ms; }
+
+/* Conector que se desenha de cima para baixo (progresso) */
 .timeline-bar {
-  width: 1px;
+  position: relative;
+  width: 2px;
   flex: 1;
   background: var(--accent-line);
-  min-height: 28px;
+  min-height: 32px;
   margin: 8px 0;
+  border-radius: 2px;
+  overflow: hidden;
 }
+.timeline-bar-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(var(--accent), var(--accent-dark));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 650ms var(--ease-out) 220ms;
+}
+.timeline-item.is-visible .timeline-bar-fill { transform: scaleY(1); }
 .timeline-item:last-child .timeline-bar { display: none; }
 
-.timeline-body       { padding-bottom: 40px; padding-top: 12px; }
-.timeline-body h3    { font-size: 20px; margin-bottom: 8px; }
-.timeline-body p     { font-size: 17px; line-height: 1.6; color: var(--muted); }
+/* Tópico como card com hover */
+.timeline-body {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin-bottom: 22px;
+  transition: transform 240ms var(--ease-out), box-shadow 240ms ease, border-color 240ms ease;
+}
+.timeline-body:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-line);
+  box-shadow: 0 12px 30px -14px rgba(229, 68, 122, 0.30);
+}
+.timeline-head    { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.timeline-body h3 { font-size: 20px; margin: 0; }
+.timeline-body p  { font-size: 16px; line-height: 1.6; color: var(--muted); margin: 0; }
+
+/* Chip de ícone (Lucide) com pop ao revelar */
+.timeline-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.timeline-icon svg { width: 21px; height: 21px; }
+.js .timeline-icon { opacity: 0; }
+.js .timeline-item.is-visible .timeline-icon { animation: icon-pop 520ms var(--ease-spring) 220ms both; }
+@keyframes icon-pop {
+  from { transform: scale(0.5) rotate(-12deg); opacity: 0; }
+  to   { transform: scale(1)   rotate(0);      opacity: 1; }
+}
+
+/* Enhancement scroll-driven: conector acompanha o scroll (progresso real) */
+@supports (animation-timeline: view()) {
+  @keyframes bar-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  .timeline-bar-fill {
+    transition: none;
+    animation: bar-grow linear both;
+    animation-timeline: view();
+    animation-range: entry 35% cover 45%;
+  }
+}
 
 /* ─── § 7 — Offer ────────────────────────────────────────────────────────── */
 .offer {
@@ -843,22 +1115,35 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
 
   body { padding-bottom: 78px; }
 
+  /* Hero empilhado: texto em cima (cream) + faixa de foto full-bleed embaixo.
+     A mulher aparece inteira (recorte centralizado), com fade suave no topo
+     da foto para fundir no fundo — mantém o feel imersivo de hero único. */
   .hero {
+    min-height: 100svh;
     background:
-      /* diagonal: bg quase-sólido no topo-esquerdo → rose no canto inferior-direito */
-      linear-gradient(148deg,
-        rgba(250, 247, 244, 0.96)  0%,
-        rgba(250, 247, 244, 0.90) 45%,
-        rgba(229,  68, 122, 0.62) 100%
-      ),
-      url('BG MARCEL.jpg') 65% 20% / cover no-repeat;
+      radial-gradient(120% 80% at 100% 100%, rgba(229, 68, 122, 0.16) 0%, transparent 60%),
+      var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .hero .container { margin-left: auto; padding-left: 20px; }
 
-  .hero-content { padding: 88px 0 68px; gap: 20px; }
+  .hero-content { padding: 84px 0 24px; gap: 18px; }
   .hero h1      { font-size: 36px; line-height: 1.1; }
   .hero-sub     { font-size: 16px; }
+
+  .hero-photo {
+    display: block;
+    width: 100%;
+    margin-top: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center 8%;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 100%);
+  }
 
   .pain { padding: calc(56px + var(--diag)) 0 56px; }
   .pain h2 { font-size: 22px; }
@@ -867,9 +1152,23 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
   .mechanism { padding: calc(72px + var(--diag)) 0 72px; }
   .mechanism-text h2 { font-size: 26px; }
 
+  .testimonials { padding: calc(64px + var(--diag)) 0 72px; }
+  .testi-head { margin-bottom: 36px; }
+  .testi-head h2 { font-size: 26px; }
+  .testi-head p  { font-size: 15px; }
+  .testi-carousel { max-width: 440px; padding: 0 40px; }
+  .testi-arrow { width: 38px; height: 38px; }
+  .testi-arrow svg { width: 20px; height: 20px; }
+  .testimonial-card { padding: 24px 20px; }
+
   .product { padding: calc(64px + var(--diag)) 0 80px; }
   .product-head h2 { font-size: 30px; }
-  .product-grid { grid-template-columns: 1fr; gap: 12px; }
+  .product-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .product-card { padding: 18px 14px; }
+  .product-card h3 { font-size: 15px; }
+  .product-card p  { font-size: 13px; }
+  .product-icon-wrap { width: 48px; height: 48px; border-radius: 12px; }
+  .product-icon { width: 24px; height: 24px; }
   .product-anchor-final { font-size: 22px !important; }
   .product-anchor-final .accent { font-size: 28px; }
 
@@ -878,9 +1177,13 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
 
   .timeline-section { padding: calc(64px + var(--diag)) 0 64px; }
   .timeline-heading { font-size: 26px; margin-bottom: 40px; }
-  .timeline-item { grid-template-columns: 60px 1fr; gap: 14px; }
-  .timeline-num  { width: 44px; height: 44px; font-size: 16px; }
-  .timeline-body h3 { font-size: 18px; }
+  .timeline-item { grid-template-columns: 56px 1fr; gap: 14px; }
+  .timeline-num  { width: 46px; height: 46px; font-size: 16px; }
+  .timeline-body { padding: 16px 18px; margin-bottom: 18px; }
+  .timeline-body h3 { font-size: 17px; }
+  .timeline-body p  { font-size: 15px; }
+  .timeline-icon { width: 34px; height: 34px; }
+  .timeline-icon svg { width: 19px; height: 19px; }
 
   .offer { padding: calc(64px + var(--diag)) 0 88px; }
   .offer-box { padding: 48px 20px 36px; }

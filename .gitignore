@@ -21,3 +21,8 @@ MIV/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Material de referência local (não vai para o deploy)
+_direcional_tmp/
+ref antes e depois/
+ref antes e depois.zip

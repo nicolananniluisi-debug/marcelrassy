@@ -311,7 +311,7 @@
         <div class="wpp-phone wpp-light" data-animate="up" data-delay="0" aria-label="Conversa de WhatsApp com a aluna Vanessa">
           <div class="wpp-bar">
             <svg class="wpp-back" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg>
-            <span class="wpp-pic" style="--pic:#d46a8e" aria-hidden="true">V</span>
+            <span class="wpp-pic" style="--pic:#d46a8e" aria-hidden="true">V<img src="provas/wpp-vanessa.jpg" alt="" loading="lazy" decoding="async"></span>
             <div class="wpp-who">
               <span class="wpp-name">Vanessa Aluna</span>
               <span class="wpp-status">online</span>
@@ -334,7 +334,7 @@
         <div class="wpp-phone wpp-dark" data-animate="up" data-delay="90" aria-label="Conversa de WhatsApp com a aluna Tatiane">
           <div class="wpp-bar">
             <svg class="wpp-back" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg>
-            <span class="wpp-pic" style="--pic:#6a7fd4" aria-hidden="true">T</span>
+            <span class="wpp-pic" style="--pic:#6a7fd4" aria-hidden="true">T<img src="provas/wpp-tatiane.jpg" alt="" loading="lazy" decoding="async"></span>
             <div class="wpp-who">
               <span class="wpp-name">Tatiane Turma 3</span>
               <span class="wpp-status">visto por último hoje às 21:48</span>
@@ -356,7 +356,7 @@
         <div class="wpp-phone wpp-light" data-animate="up" data-delay="180" aria-label="Conversa de WhatsApp com a aluna Priscila">
           <div class="wpp-bar">
             <svg class="wpp-back" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.41 7.41L14 6l-6 6l6 6l1.41-1.41L10.83 12z"/></svg>
-            <span class="wpp-pic" style="--pic:#cf8a4b" aria-hidden="true">P</span>
+            <span class="wpp-pic" style="--pic:#cf8a4b" aria-hidden="true">P<img src="provas/wpp-priscila.jpg" alt="" loading="lazy" decoding="async"></span>
             <div class="wpp-who">
               <span class="wpp-name">Priscila Consultoria</span>
               <span class="wpp-status">online</span>
@@ -767,6 +767,13 @@
     };
     if (img.complete && img.naturalWidth === 0) toInitials();
     else img.addEventListener('error', toInitials, { once: true });
+  });
+
+  /* ── Foto dos contatos do WhatsApp: cai para a inicial se a foto não existir ── */
+  document.querySelectorAll('.wpp-pic img').forEach((img) => {
+    const dropToInitial = () => img.remove();
+    if (img.complete && img.naturalWidth === 0) dropToInitial();
+    else img.addEventListener('error', dropToInitial, { once: true });
   });
 
   /* ── Entrance animations via IntersectionObserver ── */

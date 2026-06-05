@@ -16,7 +16,6 @@
   <section class="hero">
     <div class="container">
       <div class="hero-content">
-        <span class="badge-pill hero-badge">PARA MULHERES ACIMA DOS 28 ANOS</span>
         <p class="hero-continuity">
           <svg class="hero-continuity-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9.55 18a1 1 0 0 1-.74-.32l-4.55-5a1 1 0 1 1 1.48-1.36l3.8 4.17l8.99-9.86a1 1 0 0 1 1.48 1.35l-9.72 10.66a1 1 0 0 1-.74.36"/></svg>
           <span><span class="hero-continuity-name" data-nome hidden></span><span class="hero-continuity-text">Com base nas suas respostas no teste, esse é o protocolo certo pra você.</span></span>
@@ -261,13 +260,30 @@
         <button class="testi-arrow testi-prev" type="button" aria-label="Transformação anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m8.165 11.63l6.63-6.43C15.21 4.799 16 5.042 16 5.57v12.86c0 .528-.79.771-1.205.37l-6.63-6.43a.5.5 0 0 1 0-.74"/></svg></button>
         <div class="testi-viewport">
           <div class="testi-track">
-            <figure class="ba-slide"><img src="provas/antes-depois-1.jpg" alt="Antes e depois de aluna — corpo de lado" loading="lazy" decoding="async"></figure>
-            <figure class="ba-slide"><img src="provas/antes-depois-2.jpg" alt="Antes e depois de aluna — frente" loading="lazy" decoding="async"></figure>
-            <figure class="ba-slide"><img src="provas/antes-depois-3.jpg" alt="Antes e depois de aluna — selfie de espelho" loading="lazy" decoding="async"></figure>
-            <figure class="ba-slide"><img src="provas/antes-depois-4.jpg" alt="Antes e depois de aluna — costas" loading="lazy" decoding="async"></figure>
-            <figure class="ba-slide"><img src="provas/antes-depois-5.jpg" alt="Antes e depois de aluna — perfil ao ar livre" loading="lazy" decoding="async"></figure>
-            <figure class="ba-slide"><img src="provas/antes-depois-6.jpg" alt="Antes e depois de aluna — selfie de espelho" loading="lazy" decoding="async"></figure>
-            <figure class="ba-slide"><img src="provas/antes-depois-7.jpg" alt="Antes e depois de aluna — pernas e glúteos" loading="lazy" decoding="async"></figure>
+            <figure class="ba-slide">
+              <div class="ba-pair">
+                <div class="ba-photo"><img src="provas/ba-barriga-antes.jpg" alt="Aluna antes — abdômen de frente" loading="lazy" decoding="async"><span class="ba-tag ba-tag--antes">Antes</span></div>
+                <div class="ba-photo"><img src="provas/ba-barriga-depois.jpg" alt="Aluna depois — abdômen definido de frente" loading="lazy" decoding="async"><span class="ba-tag ba-tag--depois">Depois</span></div>
+              </div>
+            </figure>
+            <figure class="ba-slide">
+              <div class="ba-pair">
+                <div class="ba-photo"><img src="provas/ba-frente-antes.jpg" alt="Aluna antes — corpo de frente" loading="lazy" decoding="async"><span class="ba-tag ba-tag--antes">Antes</span></div>
+                <div class="ba-photo"><img src="provas/ba-frente-depois.jpg" alt="Aluna depois — corpo de frente mais definido" loading="lazy" decoding="async"><span class="ba-tag ba-tag--depois">Depois</span></div>
+              </div>
+            </figure>
+            <figure class="ba-slide">
+              <div class="ba-pair">
+                <div class="ba-photo"><img src="provas/ba-costas-antes.jpg" alt="Aluna antes — costas e glúteos" loading="lazy" decoding="async"><span class="ba-tag ba-tag--antes">Antes</span></div>
+                <div class="ba-photo"><img src="provas/ba-costas-depois.jpg" alt="Aluna depois — costas e glúteos tonificados" loading="lazy" decoding="async"><span class="ba-tag ba-tag--depois">Depois</span></div>
+              </div>
+            </figure>
+            <figure class="ba-slide">
+              <div class="ba-pair">
+                <div class="ba-photo"><img src="provas/ba-varanda-antes.jpg" alt="Aluna antes — perfil em pé" loading="lazy" decoding="async"><span class="ba-tag ba-tag--antes">Antes</span></div>
+                <div class="ba-photo"><img src="provas/ba-varanda-depois.jpg" alt="Aluna depois — perfil em pé mais definido" loading="lazy" decoding="async"><span class="ba-tag ba-tag--depois">Depois</span></div>
+              </div>
+            </figure>
           </div>
         </div>
         <button class="testi-arrow testi-next" type="button" aria-label="Próxima transformação"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.835 11.63L9.205 5.2C8.79 4.799 8 5.042 8 5.57v12.86c0 .528.79.771 1.205.37l6.63-6.43a.5.5 0 0 0 0-.74"/></svg></button>
@@ -276,9 +292,6 @@
           <button class="testi-dot" type="button" aria-label="Transformação 2"></button>
           <button class="testi-dot" type="button" aria-label="Transformação 3"></button>
           <button class="testi-dot" type="button" aria-label="Transformação 4"></button>
-          <button class="testi-dot" type="button" aria-label="Transformação 5"></button>
-          <button class="testi-dot" type="button" aria-label="Transformação 6"></button>
-          <button class="testi-dot" type="button" aria-label="Transformação 7"></button>
         </div>
       </div>
     </div>
@@ -851,7 +864,7 @@
       clearTimeout(hideT);
       hideT = setTimeout(() => {
         node.classList.remove('is-shown');
-        schedule(reduce ? 30000 : (25000 + Math.random() * 15000));
+        schedule(reduce ? 60000 : (40000 + Math.random() * 55000));
       }, 5200);
     };
 

@@ -1366,7 +1366,7 @@ strong { font-weight: 700; color: var(--text); }
 .js .offer-price {
   opacity: 0;
   transform: scale(0.88);
-  transition: opacity 450ms var(--ease-out) 850ms, transform 550ms var(--ease-spring) 850ms;
+  transition: opacity 450ms var(--ease-out) 120ms, transform 550ms var(--ease-spring) 120ms;
 }
 .js .offer-box.is-visible .offer-price {
   opacity: 1;

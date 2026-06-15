@@ -1767,3 +1767,239 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
   .offer-price { font-size: 60px; }
   .sticky-cta { font-size: 14px; padding: 15px 14px; }
 }
+
+/* ─── § 4.5 — Área de Membros (carrossel 3D das aulas) ──────────────────────── */
+/* Fundo escuro "plataforma" que se funde com o site claro: o gradiente começa  */
+/* na cor da seção acima (--bg-section) e termina na cor da seção abaixo (--bg). */
+.members {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 132px 0 124px;
+  background:
+    linear-gradient(180deg,
+      var(--bg-section) 0%,
+      #1a1822 11%,
+      #0e0d14 34%,
+      #0b0a10 50%,
+      #0e0d14 66%,
+      #14131b 88%,
+      var(--bg) 100%);
+}
+
+/* Brilho ambiente rosé atrás do carrossel */
+.members-aura {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: min(1100px, 120%);
+  height: 620px;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(closest-side, rgba(229, 68, 122, 0.22), rgba(229, 68, 122, 0) 70%);
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 0;
+}
+/* Textura sutil de pontos para dar profundidade ao "espaço" da plataforma */
+.members::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1.4px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 78%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.members .container { position: relative; z-index: 1; }
+
+.members-head { text-align: center; max-width: 720px; margin: 0 auto 44px; }
+.eyebrow--light { color: #f3a7c2; }
+.members-head h2 {
+  color: #fff;
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin-bottom: 18px;
+}
+.members-head p { color: rgba(255,255,255,0.62); font-size: 18px; }
+
+/* ── Stage 3D ── */
+.members-stage { position: relative; }
+
+.coverflow {
+  position: relative;
+  height: clamp(300px, 50vw, 540px);
+  perspective: 1500px;
+  perspective-origin: 50% 44%;
+  overflow: hidden;
+  outline: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.coverflow:active { cursor: grabbing; }
+.coverflow:focus-visible { box-shadow: none; }
+.coverflow:focus-visible .cf-card[data-active] {
+  outline: 2px solid #fff;
+  outline-offset: 6px;
+  border-radius: 16px;
+}
+
+.coverflow-track {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.cf-card {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: clamp(244px, 40vw, 430px);
+  aspect-ratio: 1431 / 947;
+  margin: 0;
+  transform-style: preserve-3d;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+  transition:
+    transform 640ms var(--ease-out),
+    opacity   640ms ease,
+    filter    640ms ease;
+}
+
+.cf-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+  display: block;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.4),
+    0 26px 60px rgba(0,0,0,0.55);
+  outline: 1px solid rgba(255,255,255,0.08);
+  outline-offset: -1px;
+}
+
+/* Reflexo realista (clone gerado via JS) */
+.cf-mirror {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  object-fit: cover;
+  transform: scaleY(-1);
+  transform-origin: top;
+  opacity: 0.38;
+  margin-top: 2px;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent 52%);
+          mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent 52%);
+  pointer-events: none;
+}
+
+/* Anel rosé no card ativo (toque premium) */
+.cf-card[data-active] img {
+  box-shadow:
+    0 0 0 1px rgba(229,68,122,0.55),
+    0 2px 6px rgba(0,0,0,0.45),
+    0 30px 70px rgba(0,0,0,0.6),
+    0 0 60px rgba(229,68,122,0.28);
+  outline-color: rgba(229,68,122,0.4);
+}
+
+/* ── Setas ── */
+.cf-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(20,18,26,0.55);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+  color: #fff;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+.cf-arrow:hover { background: var(--accent); border-color: var(--accent); }
+.cf-arrow:active { transform: translateY(-50%) scale(0.94); }
+.cf-arrow svg { width: 24px; height: 24px; }
+.cf-prev { left: max(8px, 2vw); }
+.cf-next { right: max(8px, 2vw); }
+
+/* ── Meta: contador + dots ── */
+.cf-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+}
+.cf-counter {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.5);
+  font-variant-numeric: tabular-nums;
+}
+.cf-counter strong { color: #fff; font-weight: 700; }
+
+.cf-dots { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 280px; }
+.cf-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  background: rgba(255,255,255,0.22);
+  cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease, width 280ms var(--ease-out);
+}
+.cf-dot:hover { background: rgba(255,255,255,0.45); }
+.cf-dot.is-active { background: var(--accent); width: 22px; border-radius: 5px; }
+
+/* ── Rodapé da seção ── */
+.members-foot { margin-top: 52px; text-align: center; }
+.members-perks {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  margin-bottom: 30px;
+}
+.members-perks li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.78);
+}
+.members-perks svg { width: 19px; height: 19px; color: var(--accent); flex-shrink: 0; }
+.members-cta { box-shadow: 0 18px 44px rgba(229,68,122,0.34); }
+
+/* ── Responsivo ── */
+@media (max-width: 760px) {
+  .members { padding: 96px 0 92px; }
+  .members-head { margin-bottom: 34px; }
+  .members-head h2 { font-size: 28px; }
+  .members-head p { font-size: 16px; }
+  .coverflow { height: clamp(250px, 68vw, 400px); perspective: 1100px; }
+  .cf-card { width: clamp(220px, 62vw, 320px); }
+  .cf-arrow { width: 44px; height: 44px; }
+  .cf-arrow svg { width: 20px; height: 20px; }
+  .cf-meta { margin-top: 30px; }
+  .members-foot { margin-top: 40px; }
+  .members-perks { gap: 12px 20px; }
+  .members-perks li { font-size: 14px; }
+}
+
+/* Respeita "reduzir movimento": sem auto-rotação e transições curtas */
+@media (prefers-reduced-motion: reduce) {
+  .cf-card { transition: transform 220ms ease, opacity 220ms ease, filter 220ms ease; }
+}

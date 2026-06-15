@@ -1801,18 +1801,6 @@ footer { background: var(--bg-card); border-top: 1px solid var(--border); paddin
   pointer-events: none;
   z-index: 0;
 }
-/* Textura sutil de pontos para dar profundidade ao "espaço" da plataforma */
-.members::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1.4px);
-  background-size: 26px 26px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 78%);
-  pointer-events: none;
-  z-index: 0;
-}
-
 .members .container { position: relative; z-index: 1; }
 
 .members-head { text-align: center; max-width: 720px; margin: 0 auto 44px; }

@@ -6,6 +6,16 @@
   <title>Gostosa em 30 Dias — Marcel Rassy</title>
   <meta name="description" content="Reative os músculos que dormiram e desinche em 30 dias. Menos de 30 minutos por dia, na sala de casa. Método do professor Marcel Rassy.">
   <script>document.documentElement.classList.add('js');</script>
+
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "x7naajn0nc");
+  </script>
+
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -1063,6 +1073,59 @@
     }, { threshold: 0 });
     heroIO.observe(hero);
   }
+})();
+</script>
+
+<!-- ── Microsoft Clarity · Smart Events (rastreamento do funil) ── -->
+<script>
+(function () {
+  /* clarity() já existe como fila desde o snippet do <head>;
+     se por algum motivo não existir, vira no-op e nada quebra. */
+  var track = function (name) {
+    try { if (window.clarity) window.clarity('event', name); } catch (e) {}
+  };
+  var tag = function (key, value) {
+    try { if (window.clarity) window.clarity('set', key, String(value).slice(0, 120)); } catch (e) {}
+  };
+
+  /* 1 + 2 ── Cliques de compra: evento de conversão + qual botão converteu */
+  var label = function (a) {
+    if (a.classList.contains('hero-cta'))           return 'hero';
+    if (a.classList.contains('product-anchor-cta'))  return 'produto';
+    if (a.classList.contains('members-cta'))         return 'membros';
+    if (a.classList.contains('offer-cta'))           return 'oferta';
+    if (a.classList.contains('sticky-cta'))          return 'sticky';
+    if (a.closest('.final-cta'))                     return 'final';
+    return 'outro';
+  };
+  document.querySelectorAll('a[href*="pay.zouti.com.br"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var origem = label(a);
+      track('checkout_click');          /* conversão principal */
+      track('cta_' + origem);           /* qual botão do funil */
+      tag('ultimo_cta', origem);        /* tag pra filtrar gravações */
+    });
+  });
+
+  /* 3 ── Engajamento com o carrossel da Área de Membros (dispara 1x por sessão) */
+  var members = document.getElementById('coverflow');
+  if (members) {
+    var fired = false;
+    var hit = function () { if (!fired) { fired = true; track('membros_carrossel'); } };
+    var stage = members.closest('.members-stage') || members;
+    stage.addEventListener('pointerdown', hit, { passive: true });
+    stage.addEventListener('click', hit);
+  }
+
+  /* 4 ── Abertura de perguntas do FAQ (com a pergunta como tag) */
+  document.querySelectorAll('.faq details').forEach(function (d) {
+    d.addEventListener('toggle', function () {
+      if (!d.open) return;
+      var q = d.querySelector('summary');
+      track('faq_open');
+      if (q) tag('faq_pergunta', q.textContent.trim());
+    });
+  });
 })();
 </script>
 
